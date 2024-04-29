@@ -1,4 +1,4 @@
-from flask import request, Flask
+from flask import request, Flask, send_from_directory
 from werkzeug.utils import secure_filename
 from os.path import join
 from datetime import datetime
@@ -20,10 +20,15 @@ connect.execute(
 
 @app.route('/')
 def home():
-    return {'are you here': 'you here my frend'}
+    return {'are you here': 'this is home page it is useless'}
+
+@app.route('/getPhoto/<filename>', methods = ['GET'])
+def getPhoto(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route('/addAZ', methods = ['POST']) 
 def addAZ():
+    print(request.data, request.args, request.form)
     if 'file' not in request.files:
         return '', 304
 
@@ -66,4 +71,4 @@ def getAZ():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True, port=80)
